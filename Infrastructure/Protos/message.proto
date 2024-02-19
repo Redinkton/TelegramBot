@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "TelegramBot";
+
+package message;
+
+service Messages {
+   rpc ProcessMessage (MessageRequest) returns (MessageResponse);
+}
+
+message MessageRequest {
+  string text =  1;
+}
+
+message MessageResponse {
+  string result =  1;
+}

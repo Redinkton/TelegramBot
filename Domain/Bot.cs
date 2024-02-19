@@ -1,7 +1,7 @@
 ﻿namespace Domain
 {
-    public class Bot
+    public record Bot
     {
-        public static string ApiKey = "key";
+        public string Message { get; set; }
     }
 }
