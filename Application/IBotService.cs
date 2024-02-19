@@ -2,7 +2,6 @@
 {
     public interface IBotService
     {
-        Task<string> GetUpdates();
-
+        Task SendToGRPCService(string text);
     }
 }

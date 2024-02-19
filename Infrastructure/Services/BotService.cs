@@ -1,30 +1,25 @@
 ﻿using Application;
-using Domain;
+using Grpc.Net.Client;
+using TelegramBot;
 
 namespace Infrastructure.Services
 {
     public class BotService : IBotService
     {
-        private readonly HttpClient _httpClient;
-        public BotService(HttpClient httpClient) 
+        public async Task SendToGRPCService(string text)
         {
-            _httpClient = new HttpClient();
-        }
-        public async Task<string> GetUpdates()
-        {
-            string apiUrl = $"https://api.telegram.org/bot{Bot.ApiKey}/getUpdates";
-
-            var response = await _httpClient.GetAsync(apiUrl);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                string responseBody = await response.Content.ReadAsStringAsync();
-                // Process the received data
-                return responseBody;
+                using var channel = GrpcChannel.ForAddress("https://localhost:7002");
+
+                var client = new Messages.MessagesClient(channel);
+                var response = await client.ProcessMessageAsync(new MessageRequest { Text = text });
+
+                Console.WriteLine(response.Result);
             }
-            else
+            catch (Exception ex)
             {
-                // Handle the error
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
